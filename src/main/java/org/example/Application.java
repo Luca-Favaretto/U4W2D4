@@ -73,7 +73,7 @@ public class Application {
         System.out.println("-----------------------------------------");
         System.out.println();
         System.out.println("Esercizio3");
-        products.stream().sorted(Comparator.comparing(Product::getPrice).reversed()).limit(10).forEach(product -> System.out.println(product.getPrice()));
+        products.stream().sorted(Comparator.comparing(Product::getPrice).reversed()).limit(5).forEach(product -> System.out.println(product.getPrice()));
         System.out.println("-----------------------------------------");
         System.out.println();
         System.out.println("Esercizio4");
