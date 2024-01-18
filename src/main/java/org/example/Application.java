@@ -11,7 +11,7 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 public class Application {
-    static Supplier<Customer> newCustumer = () -> {
+    static Supplier<Customer> newCustomer = () -> {
         Faker faker = new Faker(Locale.ITALY);
         Random rnd = new Random();
         return new Customer(faker.lordOfTheRings().character(), rnd.nextInt(0, 4));
@@ -47,37 +47,68 @@ public class Application {
     static List<Order> orders = new ArrayList<>();
 
     public static void main(String[] args) {
+
         create();
-        System.out.println(customers.get(1));
-        System.out.println(orders);
+
+        System.out.println(customers.get(0));
+        System.out.println(customers);
+        orders.forEach(System.out::println);
 
         System.out.println("Esercizio1");
-        Map<Customer, List<Order>> custOrder = orders.stream().filter(order -> order.getCustomers() != null).collect(Collectors.groupingBy(Order::getCustomers));
+        Map<Customer, List<Order>> custOrder = orders.stream().filter(customers -> customers == null).collect(Collectors.groupingBy(Order::getCustomers));
         custOrder.forEach((custumer, orders) -> System.out.println("Customer; " + custumer.getName() + ", " + orders));
 
         System.out.println("-----------------------------------------");
         System.out.println();
+        System.out.println("Esercizio2");
+        Map<Customer, Double> list2 = orders.stream().filter(customers -> customers == null).collect(Collectors.groupingBy(Order::getCustomers, Collectors.summingDouble(Order::getTotal)));
+        list2.forEach((custumer, sumOrd) -> System.out.println("Customer; " + custumer.getName() + "spent " + sumOrd));
+        System.out.println("-----------------------------------------");
+        System.out.println();
+        System.out.println("Esercizio3");
+        products.stream().sorted(Comparator.comparing(Product::getPrice).reversed()).limit(10).forEach(product -> System.out.println(product.getPrice()));
+        System.out.println("-----------------------------------------");
+        System.out.println();
+        System.out.println("Esercizio4");
+        double sum = orders.stream().mapToDouble(Order::getTotal).average().orElse(0.0);
+        System.out.println(sum);
+        System.out.println("-----------------------------------------");
+        System.out.println();
+        System.out.println("Esercizio5");
+        Map<String, Double> list5 = products.stream().collect(Collectors.groupingBy(Product::getCategory, Collectors.summingDouble(Product::getPrice)));
+        list5.forEach((category, sumCateg) -> System.out.println("Category " + category + "sum " + sumCateg));
+        System.out.println("-----------------------------------------");
+        System.out.println();
+        System.out.println("Esercizio6");
+        System.out.println("-----------------------------------------");
+        System.out.println();
+        System.out.println("Esercizio7");
+
 
     }
 
     static void create() {
 
-        for (int i = 0; i < 20; i++) {
-            customers.add(newCustumer.get());
+        for (int i = 0; i < 1; i++) {
+            customers.add(newCustomer.get());
             products.add(newBeer.get());
             products.add(newBook.get());
             products.add(newFood.get());
         }
-        for (int i = 0; i < customers.size(); i++) {
+
+        for (Customer customer : customers) {
+            System.out.println(customer);
             Random rnd = new Random();
             List<Product> productsOrder = new ArrayList<>();
             for (int y = 0; y < 3; y++) {
                 productsOrder.add(products.get(rnd.nextInt(products.size())));
             }
-            orders.add(new Order("complete", past.get(), future.get(), productsOrder, customers.get(rnd.nextInt(customers.size()))));
 
-//            orders.add(new Order("complete", past.get(), future.get(), productsOrder, customers.get(rnd.nextInt(customers.size()))));
+
+            orders.add(new Order("complete", past.get(), future.get(), productsOrder, customer));
+
         }
+
     }
 }
 
