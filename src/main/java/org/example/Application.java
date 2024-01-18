@@ -37,13 +37,11 @@ public class Application {
 
     static Supplier<LocalDate> past = () -> {
         Random rnd = new Random();
-        LocalDate today = LocalDate.now().minusDays(rnd.nextInt(4));
-        return today;
+        return LocalDate.now().minusDays(rnd.nextInt(4));
     };
     static Supplier<LocalDate> future = () -> {
         Random rnd = new Random();
-        LocalDate today = LocalDate.now().plusDays(rnd.nextInt(4));
-        return today;
+        return LocalDate.now().plusDays(rnd.nextInt(4));
     };
     static List<Customer> customers = new ArrayList<>();
     static List<Product> products = new ArrayList<>();
@@ -62,14 +60,14 @@ public class Application {
         orders.forEach(System.out::println);
 
         System.out.println("Esercizio1");
-        Map<Customer, List<Order>> custOrder = orders.stream().filter(customers -> customers == null).collect(Collectors.groupingBy(Order::getCustomers));
-        custOrder.forEach((custumer, orders) -> System.out.println("Customer; " + custumer.getName() + ", " + orders));
+        Map<Customer, List<Order>> custOrder = orders.stream().collect(Collectors.groupingBy(Order::getCustomers));
+        custOrder.forEach((custumer, orders) -> System.out.println("Custumer; " + custumer.getName() + ", " + orders));
 
         System.out.println("-----------------------------------------");
         System.out.println();
         System.out.println("Esercizio2");
-        Map<Customer, Double> list2 = orders.stream().filter(customers -> customers == null).collect(Collectors.groupingBy(Order::getCustomers, Collectors.summingDouble(Order::getTotal)));
-        list2.forEach((custumer, sumOrd) -> System.out.println("Customer; " + custumer.getName() + "spent " + sumOrd));
+        Map<Customer, Double> list2 = orders.stream().collect(Collectors.groupingBy(Order::getCustomers, Collectors.summingDouble(Order::getTotal)));
+        list2.forEach((custumer, sumOrd) -> System.out.println("Custumer; " + custumer.getName() + "spent " + sumOrd));
         System.out.println("-----------------------------------------");
         System.out.println();
         System.out.println("Esercizio3");

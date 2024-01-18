@@ -12,7 +12,7 @@ public class Order {
     private List<Product> products;
     private Customer customer;
 
-    public Order(String status, LocalDate orderDate, LocalDate deliveryDate, List<Product> products, Customer customers) {
+    public Order(String status, LocalDate orderDate, LocalDate deliveryDate, List<Product> products, Customer customer) {
         Random rdn = new Random();
         this.id = rdn.nextLong();
         this.status = status;
