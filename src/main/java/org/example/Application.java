@@ -60,14 +60,14 @@ public class Application {
         orders.forEach(System.out::println);
 
         System.out.println("Esercizio1");
-        Map<Customer, List<Order>> custOrder = orders.stream().collect(Collectors.groupingBy(Order::getCustomers));
-        custOrder.forEach((custumer, orders) -> System.out.println("Custumer; " + custumer.getName() + ", " + orders));
+        Map<String, List<Order>> custOrder = orders.stream().collect(Collectors.groupingBy(Order::getCustomersName));
+        custOrder.forEach((custumer, orders) -> System.out.println("Il " + custumer + ", " + orders));
 
         System.out.println("-----------------------------------------");
         System.out.println();
         System.out.println("Esercizio2");
-        Map<Customer, Double> list2 = orders.stream().collect(Collectors.groupingBy(Order::getCustomers, Collectors.summingDouble(Order::getTotal)));
-        list2.forEach((custumer, sumOrd) -> System.out.println("Custumer; " + custumer.getName() + "spent " + sumOrd));
+        Map<String, Double> list2 = orders.stream().collect(Collectors.groupingBy(Order::getCustomersName, Collectors.summingDouble(Order::getTotal)));
+        list2.forEach((custumer, sumOrd) -> System.out.println("Il " + custumer + "spent " + sumOrd));
         System.out.println("-----------------------------------------");
         System.out.println();
         System.out.println("Esercizio3");
@@ -97,7 +97,7 @@ public class Application {
 
     static void create() throws IOException {
 
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 20; i++) {
             customers.add(newCustomer.get());
             products.add(newBeer.get());
             products.add(newBook.get());

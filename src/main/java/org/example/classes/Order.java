@@ -85,4 +85,8 @@ public class Order {
     public void setCustomers(Customer customers) {
         this.customer = customer;
     }
+
+    public String getCustomersName() {
+        return customer.getName();
+    }
 }
