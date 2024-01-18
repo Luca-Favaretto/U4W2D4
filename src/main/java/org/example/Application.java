@@ -1,10 +1,13 @@
 package org.example;
 
 import com.github.javafaker.Faker;
+import org.apache.commons.io.FileUtils;
 import org.example.classes.Customer;
 import org.example.classes.Order;
 import org.example.classes.Product;
 
+import java.io.File;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.function.Supplier;
@@ -46,9 +49,13 @@ public class Application {
     static List<Product> products = new ArrayList<>();
     static List<Order> orders = new ArrayList<>();
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
 
-        create();
+        try {
+            create();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
         System.out.println(customers.get(0));
         System.out.println(customers);
@@ -76,20 +83,23 @@ public class Application {
         System.out.println();
         System.out.println("Esercizio5");
         Map<String, Double> list5 = products.stream().collect(Collectors.groupingBy(Product::getCategory, Collectors.summingDouble(Product::getPrice)));
-        list5.forEach((category, sumCateg) -> System.out.println("Category " + category + "sum " + sumCateg));
+        list5.forEach((category, sumCateg) -> System.out.println("Category " + category + " sum " + sumCateg));
         System.out.println("-----------------------------------------");
         System.out.println();
         System.out.println("Esercizio6");
+        saveToDisk();
         System.out.println("-----------------------------------------");
         System.out.println();
         System.out.println("Esercizio7");
+        List<Product> prod = loadFromDisk();
+        prod.forEach(System.out::println);
 
 
     }
 
-    static void create() {
+    static void create() throws IOException {
 
-        for (int i = 0; i < 1; i++) {
+        for (int i = 0; i < 3; i++) {
             customers.add(newCustomer.get());
             products.add(newBeer.get());
             products.add(newBook.get());
@@ -108,6 +118,33 @@ public class Application {
             orders.add(new Order("complete", past.get(), future.get(), productsOrder, customer));
 
         }
+
+
+    }
+
+    public static void saveToDisk() throws IOException {
+        String toWrite = "";
+
+        for (Product product : products) {
+            toWrite += product.getName() + "@" + product.getCategory() + "@" + product.getPrice() + "#";
+
+        }
+        File file = new File("products.txt");
+        FileUtils.writeStringToFile(file, toWrite, "UTF-8");
+    }
+
+    public static List<Product> loadFromDisk() throws IOException {
+        File file = new File("products.txt");
+
+        String fileString = FileUtils.readFileToString(file, "UTF-8");
+
+        List<String> splitElementiString = Arrays.asList(fileString.split("#"));
+
+        return splitElementiString.stream().map(stringa -> {
+
+            String[] productInfos = stringa.split("@");
+            return new Product(productInfos[0], productInfos[1], Double.parseDouble(productInfos[2]));
+        }).toList();
 
     }
 }
