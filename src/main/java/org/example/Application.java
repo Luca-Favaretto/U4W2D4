@@ -55,40 +55,38 @@ public class Application {
             throw new RuntimeException(e);
         }
 
-        System.out.println(customers.get(0));
-        System.out.println(customers);
-        orders.forEach(System.out::println);
 
-        System.out.println("Esercizio1");
-        Map<String, List<Order>> custOrder = orders.stream().collect(Collectors.groupingBy(Order::getCustomersName));
-        custOrder.forEach((custumer, orders) -> System.out.println("Il " + custumer + ", " + orders));
+        System.out.println("Exercise1");
+        Map<String, List<Order>> list = orders.stream().collect(Collectors.groupingBy(Order::getCustomersName));
+        list.forEach((custumer, orders) -> System.out.println(custumer + ", " + orders));
 
         System.out.println("-----------------------------------------");
         System.out.println();
-        System.out.println("Esercizio2");
+        System.out.println("Exercise2");
         Map<String, Double> list2 = orders.stream().collect(Collectors.groupingBy(Order::getCustomersName, Collectors.summingDouble(Order::getTotal)));
-        list2.forEach((custumer, sumOrd) -> System.out.println("Il " + custumer + "spent " + sumOrd));
+        list2.forEach((custumer, sumOrd) -> System.out.println(custumer + " spent " + sumOrd + "$"));
         System.out.println("-----------------------------------------");
         System.out.println();
-        System.out.println("Esercizio3");
-        products.stream().sorted(Comparator.comparing(Product::getPrice).reversed()).limit(5).forEach(product -> System.out.println(product.getPrice()));
+        System.out.println("Exercise3");
+        products.stream().sorted(Comparator.comparing(Product::getPrice).reversed()).limit(5).forEach(product -> System.out.println("The product more expensive are " + product.getName() + " and they cost " + product.getPrice() + "$"));
         System.out.println("-----------------------------------------");
         System.out.println();
-        System.out.println("Esercizio4");
-        double sum = orders.stream().mapToDouble(Order::getTotal).average().orElse(0.0);
-        System.out.println(sum);
+        System.out.println("Exercise4");
+        double avaregeOrders = orders.stream().mapToDouble(Order::getTotal).average().orElse(0.0);
+        System.out.println("The average of orders is " + avaregeOrders);
+
         System.out.println("-----------------------------------------");
         System.out.println();
-        System.out.println("Esercizio5");
+        System.out.println("Exercise5");
         Map<String, Double> list5 = products.stream().collect(Collectors.groupingBy(Product::getCategory, Collectors.summingDouble(Product::getPrice)));
         list5.forEach((category, sumCateg) -> System.out.println("Category " + category + " sum " + sumCateg));
         System.out.println("-----------------------------------------");
         System.out.println();
-        System.out.println("Esercizio6");
+        System.out.println("Exercise6");
         saveToDisk();
         System.out.println("-----------------------------------------");
         System.out.println();
-        System.out.println("Esercizio7");
+        System.out.println("Exercise7");
         List<Product> prod = loadFromDisk();
         prod.forEach(System.out::println);
 
@@ -97,7 +95,7 @@ public class Application {
 
     static void create() throws IOException {
 
-        for (int i = 0; i < 20; i++) {
+        for (int i = 0; i < 5; i++) {
             customers.add(newCustomer.get());
             products.add(newBeer.get());
             products.add(newBook.get());
@@ -105,7 +103,7 @@ public class Application {
         }
 
         for (Customer customer : customers) {
-            System.out.println(customer);
+
             Random rnd = new Random();
             List<Product> productsOrder = new ArrayList<>();
             for (int y = 0; y < 3; y++) {
@@ -121,14 +119,14 @@ public class Application {
     }
 
     public static void saveToDisk() throws IOException {
-        String toWrite = "";
+        StringBuilder toWrite = new StringBuilder();
 
         for (Product product : products) {
-            toWrite += product.getName() + "@" + product.getCategory() + "@" + product.getPrice() + "#";
+            toWrite.append(product.getName()).append("@").append(product.getCategory()).append("@").append(product.getPrice()).append("#");
 
         }
         File file = new File("products.txt");
-        FileUtils.writeStringToFile(file, toWrite, "UTF-8");
+        FileUtils.writeStringToFile(file, toWrite.toString(), "UTF-8");
     }
 
     public static List<Product> loadFromDisk() throws IOException {
@@ -136,9 +134,9 @@ public class Application {
 
         String fileString = FileUtils.readFileToString(file, "UTF-8");
 
-        List<String> splitElementiString = Arrays.asList(fileString.split("#"));
+        List<String> splitElementString = Arrays.asList(fileString.split("#"));
 
-        return splitElementiString.stream().map(stringa -> {
+        return splitElementString.stream().map(stringa -> {
 
             String[] productInfos = stringa.split("@");
             return new Product(productInfos[0], productInfos[1], Double.parseDouble(productInfos[2]));
